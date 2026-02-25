@@ -1,0 +1,205 @@
+<section class="py-2 bg-[#0a0a0a]">
+  <div class="max-w-6xl mx-auto px-8 grid md:grid-cols-2 gap-20 items-center">
+
+    <!-- ================= MOCKUP AREA ================= -->
+    <div class="relative mx-auto w-[320px] md:w-[380px]">
+
+      <!-- FRONT TEE -->
+      <img
+        id="frontTee"
+        src="/public/Front.jpg"
+        class="w-full block transition-opacity duration-500"
+      />
+
+      <!-- BACK TEE -->
+      <img
+        id="backTee"
+        src="/public/Back.jpg"
+        class="w-full absolute inset-0 opacity-0 transition-opacity duration-500"
+      />
+
+      <!-- FRONT PRINT AREA -->
+      <div
+        id="printFront"
+        class="absolute top-[28%] left-1/2 w-[46%] h-[38%]
+               -translate-x-1/2 overflow-hidden"
+      >
+        <img id="designFront" class="absolute cursor-move opacity-0" />
+      </div>
+
+      <!-- BACK PRINT AREA -->
+      <div
+        id="printBack"
+        class="absolute top-[26%] left-1/2 w-[46%] h-[38%]
+               -translate-x-1/2 overflow-hidden opacity-0"
+      >
+        <img id="designBack" class="absolute cursor-move opacity-0" />
+      </div>
+
+    </div>
+
+    <!-- ================= CONTROLS ================= -->
+    <div>
+      <p class="text-xs uppercase tracking-[0.4em] text-neutral-400 mb-4">
+        Live Preview
+      </p>
+
+      <h2 class="text-5xl font-bold mb-8">
+        CUSTOM T-SHIRT<br />
+        <span class="text-emerald-400">DESIGN STUDIO</span>
+      </h2>
+
+      <!-- FRONT / BACK -->
+      <div class="flex gap-4 mb-8">
+        <button id="frontBtn" class="px-6 py-3 bg-white text-black rounded-full">
+          FRONT
+        </button>
+        <button id="backBtn" class="px-6 py-3 border border-white/20 rounded-full">
+          BACK
+        </button>
+      </div>
+
+      <!-- COLOR -->
+      <div class="flex gap-4 mb-8">
+        <button data-color="black" class="colorBtn px-5 py-2 border rounded-full">
+          Black
+        </button>
+        <button data-color="white" class="colorBtn px-5 py-2 border rounded-full">
+          White
+        </button>
+      </div>
+
+      <!-- UPLOADS -->
+      <label class="block mb-6">
+        <span class="text-sm text-neutral-400">Front Design</span>
+        <input id="uploadFront" type="file" accept="image/*" class="block w-full mt-2" />
+      </label>
+
+      <label class="block mb-6">
+        <span class="text-sm text-neutral-400">Back Design</span>
+        <input id="uploadBack" type="file" accept="image/*" class="block w-full mt-2" />
+      </label>
+
+      <!-- SIZE -->
+      <label class="block mb-8">
+        <span class="text-sm text-neutral-400">Print Size</span>
+        <input id="sizeSlider" type="range" min="40" max="120" value="80" class="w-full mt-2" />
+      </label>
+
+      <!-- CTA -->
+      <button
+        id="orderBtn"
+        class="px-14 py-5 bg-emerald-500 text-black rounded-full font-semibold"
+      >
+        ORDER ON WHATSAPP
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= SCRIPT ================= -->
+  <script>
+    let active = "front";
+    let scale = 0.8;
+
+    const frontBtn = document.getElementById("frontBtn");
+    const backBtn = document.getElementById("backBtn");
+
+    const frontTee = document.getElementById("frontTee");
+    const backTee = document.getElementById("backTee");
+
+    const printFront = document.getElementById("printFront");
+    const printBack = document.getElementById("printBack");
+
+    const designFront = document.getElementById("designFront");
+    const designBack = document.getElementById("designBack");
+
+    const uploadFront = document.getElementById("uploadFront");
+    const uploadBack = document.getElementById("uploadBack");
+
+    const sizeSlider = document.getElementById("sizeSlider");
+
+    // Toggle front/back
+    function toggle(side) {
+      active = side;
+      frontTee.style.opacity = side === "front" ? "1" : "0";
+      backTee.style.opacity = side === "back" ? "1" : "0";
+      printFront.style.opacity = side === "front" ? "1" : "0";
+      printBack.style.opacity = side === "back" ? "1" : "0";
+    }
+
+    frontBtn.onclick = () => toggle("front");
+    backBtn.onclick = () => toggle("back");
+
+    // Upload handlers
+    function upload(input, target) {
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          target.src = reader.result;
+          target.style.opacity = "1";
+          target.style.width = scale * 100 + "%";
+        };
+        reader.readAsDataURL(file);
+      };
+    }
+
+    upload(uploadFront, designFront);
+    upload(uploadBack, designBack);
+
+    // Resize
+    sizeSlider.oninput = e => {
+      scale = e.target.value / 100;
+      designFront.style.width = scale * 100 + "%";
+      designBack.style.width = scale * 100 + "%";
+    };
+
+    // Drag
+    function enableDrag(el) {
+      let x=0, y=0, drag=false;
+      el.onmousedown = e => {
+        drag = true;
+        x = e.clientX;
+        y = e.clientY;
+        document.onmousemove = m => {
+          if (!drag) return;
+          el.style.left = (el.offsetLeft + m.clientX - x) + "px";
+          el.style.top  = (el.offsetTop  + m.clientY - y) + "px";
+          x = m.clientX;
+          y = m.clientY;
+        };
+        document.onmouseup = () => drag = false;
+      };
+    }
+
+    enableDrag(designFront);
+    enableDrag(designBack);
+
+    // COLOR SWITCH (YOUR IMAGE NAMES)
+    document.querySelectorAll(".colorBtn").forEach(btn => {
+      btn.onclick = () => {
+        const c = btn.dataset.color;
+
+        if (c === "black") {
+          frontTee.src = "/public/Front.jpg";
+          backTee.src  = "/public/Back.jpg";
+        }
+
+        if (c === "white") {
+          frontTee.src = "/public/wt front.jpg";
+          backTee.src  = "/public/wt back.jpg";
+        }
+      };
+    });
+
+    // WhatsApp
+    document.getElementById("orderBtn").onclick = () => {
+      alert("Please take a screenshot of the preview and send it on WhatsApp.");
+      window.open(
+        "https://wa.me/7305506602?text=I have created a custom T-shirt design. Please see the preview.",
+        "_self"
+      );
+    };
+  </script>
+</section>

@@ -1,0 +1,39 @@
+---
+const products = [
+  { name: "Oversized Black Tee", price: "699", image: "/black.jpg" },
+  { name: "Minimal White Print", price: "649", image: "/Front.jpg" },
+  { name: "Signature Logo Tee", price: "799", image: "/Front.jpg" },
+];
+---
+
+<section id="products" class="pt-20 px-8 max-w-7xl mx-auto">
+  <h2 class="text-5xl font-bold mb-20 text-center tracking-wide">
+    THE COLLECTION
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
+    {products.map(product => (
+      <div class="group bg-[#111] rounded-2xl overflow-hidden border border-white/10">
+        <img
+          src={product.image}
+          alt={product.name}
+          class="w-full h-[420px] object-cover group-hover:scale-105 transition duration-700"
+        />
+
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-1">{product.name}</h3>
+          <p class="text-neutral-400 mb-4">₹ {product.price}</p>
+
+          <a
+            href={`https://wa.me/917305506602?text=I want to order ${product.name}`}
+            target="_self"
+            class="block w-full text-center py-3 rounded-xl 
+                   border border-white/20 hover:bg-white hover:text-black transition"
+          >
+            ORDER NOW
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

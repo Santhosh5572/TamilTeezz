@@ -1,14 +1,22 @@
 {
-  "name": "fabrico",
+  "name": "fabrico-website",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.12.0"
+    "@astrojs/tailwind": "^6.0.2",
+    "alpinejs": "^3.14.9",
+    "astro": "^4.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
   }
 }
